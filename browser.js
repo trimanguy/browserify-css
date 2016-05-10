@@ -25,6 +25,11 @@ module.exports = {
         var head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style');
 
+        var existingStyleSheet = document.getElementById(attributes['href']);
+        if(existingStyleSheet){
+            existingStyleSheet.parentNode.removeChild(existingStyleSheet);
+        }
+
         style.type = 'text/css';
 
         for (var key in attributes) {
@@ -33,8 +38,11 @@ module.exports = {
             }
             var value = attributes[key];
             style.setAttribute('data-' + key, value);
+            if(key==='href'){
+                style.setAttribute('id', value);
+            }
         }
-        
+
         if (style.sheet) { // for jsdom and IE9+
             style.innerHTML = cssText;
             style.sheet.cssText = cssText;
